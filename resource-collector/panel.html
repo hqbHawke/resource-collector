@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Resource Collector Panel</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      height: 100vh;
+      overflow: hidden;
+      font-size: 12px;
+    }
+    .container { display: flex; flex-direction: column; height: 100%; }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      background: #2d2d2d;
+      border-bottom: 1px solid #404040;
+    }
+    .toolbar-title { font-weight: 600; color: #fff; }
+    .toolbar-stats { display: flex; gap: 12px; margin-left: auto; color: #9cdcfe; }
+    .btn {
+      padding: 4px 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .btn-primary { background: #0e639c; color: #fff; }
+    .btn-primary:hover { background: #1177bb; }
+    .btn-secondary { background: #3c3c3c; color: #d4d4d4; }
+    .btn-secondary:hover { background: #4c4c4c; }
+    .tabs {
+      display: flex;
+      background: #252526;
+      border-bottom: 1px solid #404040;
+    }
+    .tab {
+      padding: 6px 14px;
+      color: #969696;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .tab:hover { color: #d4d4d4; }
+    .tab.active { color: #fff; border-bottom-color: #0e639c; }
+    .filter-bar {
+      display: none;
+      padding: 6px 10px;
+      background: #252526;
+      border-bottom: 1px solid #404040;
+      align-items: center;
+    }
+    .filter-bar.show { display: flex; }
+    #filterList {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      flex: 1;
+    }
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      background: #3c3c3c;
+      border-radius: 3px;
+    }
+    .filter-item input { margin: 0; }
+    .filter-item label { cursor: pointer; }
+    .filter-item .count { color: #6a9955; }
+    .filter-actions { margin-left: auto; display: flex; gap: 6px; }
+    .filter-actions button {
+      padding: 2px 8px;
+      background: #4c4c4c;
+      border: none;
+      border-radius: 3px;
+      color: #d4d4d4;
+      cursor: pointer;
+    }
+    .content { flex: 1; overflow: auto; }
+    .list { padding: 6px; }
+    .list-item {
+      display: flex;
+      align-items: center;
+      padding: 4px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .list-item:hover { background: #2a2d2e; }
+    .list-item-type {
+      width: 45px;
+      padding: 1px 4px;
+      border-radius: 2px;
+      font-size: 10px;
+      text-align: center;
+      margin-right: 8px;
+      background: #4c4c4c;
+      color: #fff;
+    }
+    .list-item-url {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #9cdcfe;
+    }
+    .list-item-size { color: #6a9955; margin-left: 8px; }
+    .list-item-time { color: #666; margin-left: 8px; font-size: 10px; }
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toolbar">
+      <span class="toolbar-title">Resource Collector</span>
+      <div class="toolbar-stats">
+        <span>资源: <strong id="resourceCount">0</strong></span>
+        <span>API: <strong id="apiCount">0</strong></span>
+      </div>
+      <button class="btn btn-primary" id="downloadBtn">下载 ZIP</button>
+      <button class="btn btn-secondary" id="clearBtn">清空</button>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="resources">静态资源</div>
+      <div class="tab" data-tab="api">API 请求</div>
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+      <div id="filterList"></div>
+      <div class="filter-actions">
+        <button id="selectAll">全选</button>
+        <button id="selectNone">取消</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="list" id="resourceList"></div>
+    </div>
+  </div>
+
+  <script src="libs/jszip.min.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>
